@@ -33,10 +33,10 @@ class HBNBCommand(cmd.Cmd):
         """Creates a new instance of BaseModel, saves it (to the JSON file)\n
         """
         if args == "":
-            print("* class name missing *")
+            print("** class name missing **")
             return (HBNBCommand.check_isatty())
         elif args not in HBNBCommand.class_list():
-            print("* class doesn't exist *")
+            print("** class doesn't exist **")
             return (HBNBCommand.check_isatty())
         if args == "User":
             my_model = User()
@@ -61,14 +61,14 @@ class HBNBCommand(cmd.Cmd):
         """Prints the string representation of an instance\n
         """
         if len(args) == 0:
-            print("* class name missing *")
+            print("** class name missing **")
             return (HBNBCommand.check_isatty())
         argv = args.split(" ")
         if argv[0] not in HBNBCommand.class_list():
-            print("* class doesn't exist *")
+            print("** class doesn't exist **")
             return (HBNBCommand.check_isatty())
         elif len(argv) == 1:
-            print("* instance id missing *")
+            print("** instance id missing **")
             return (HBNBCommand.check_isatty())
         storage.reload()
         all_obj_dict = storage.all()
@@ -78,21 +78,21 @@ class HBNBCommand(cmd.Cmd):
                 print(all_obj_dict[key])
                 return (HBNBCommand.check_isatty())
             continue
-        print("* no instance found *")
+        print("** no instance found **")
         return (HBNBCommand.check_isatty())
 
     def do_destroy(self, args):
         """Deletes an instance based on the class name\n
         """
         if args == "":
-            print("* class name missing *")
+            print("** class name missing **")
             return (HBNBCommand.check_isatty())
         argv = args.split(" ")
         if argv[0] not in HBNBCommand.class_list():
-            print("* class doesn't exist *")
+            print("** class doesn't exist **")
             return (HBNBCommand.check_isatty())
         elif len(argv) == 1:
-            print("* instance id missing *")
+            print("** instance id missing **")
             return (HBNBCommand.check_isatty())
         storage.reload()
         all_obj_dict = storage.all()
@@ -103,14 +103,14 @@ class HBNBCommand(cmd.Cmd):
                 storage.save()
                 return (HBNBCommand.check_isatty())
             continue
-        print("* no instance found *")
+        print("** no instance found **")
         return (HBNBCommand.check_isatty())
 
     def do_all(self, args):
         """Prints all string representation of all instances\n
         """
         if args not in HBNBCommand.class_list() and args != "":
-            print("* class doesn't exist *")
+            print("** class doesn't exist **")
             return (HBNBCommand.check_isatty())
         storage.reload()
         all_obj_dict = storage.all()
@@ -124,14 +124,14 @@ class HBNBCommand(cmd.Cmd):
         """Updates an instance based on the class name\n
         """
         if args == "":
-            print("* class name missing *")
+            print("** class name missing **")
             return (HBNBCommand.check_isatty())
         argv = args.split(" ")
         if argv[0] not in HBNBCommand.class_list():
-            print("* class doesn't exist *")
+            print("** class doesn't exist **")
             return (HBNBCommand.check_isatty())
         elif len(argv) == 1:
-            print("* instance id missing *")
+            print("** instance id missing **")
             return (HBNBCommand.check_isatty())
         storage.reload
         all_obj_dict = storage.all()
@@ -139,15 +139,15 @@ class HBNBCommand(cmd.Cmd):
         for key in all_obj_dict.keys():
             if class_id == key:
                 if len(argv) == 2:
-                    print("* attribute name missing *")
+                    print("** attribute name missing **")
                     return (HBNBCommand.check_isatty())
                 elif len(argv) == 3:
-                    print("* value missing *")
+                    print("** value missing **")
                     return (HBNBCommand.check_isatty())
                 setattr(all_obj_dict[key], argv[2], argv[3])
                 all_obj_dict[key].save()
                 return (HBNBCommand.check_isatty())
-        print("* no instance found *")
+        print("** no instance found **")
         return (HBNBCommand.check_isatty())
 
     def default(self, line):
