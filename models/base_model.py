@@ -44,7 +44,7 @@ class BaseModel:
         obj_dict["created_at"] = self.created_at.isoformat()
         obj_dict["updated_at"] = self.updated_at.isoformat()
         obj_dict["__class__"] = self.__class__.__name__
-        return rdict
+        return obj_dict
 
     def __str__(self):
         """Return the print/str representation of the BaseModel instance."""
