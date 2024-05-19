@@ -1,1 +1,1 @@
-Bona and Alphonse Project Alx Airnbnb Clone
+Bona Project Alx Airnbnb Clone
