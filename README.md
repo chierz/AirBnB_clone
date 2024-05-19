@@ -1,1 +1,1 @@
-This is a Project Alx Airnbnb Clone
+I collaboratively authored this ALX AIRBNB Clone
