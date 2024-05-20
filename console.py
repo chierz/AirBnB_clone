@@ -4,6 +4,7 @@ This module defines a class MyConsole
 """
 import cmd
 import sys
+import re
 from shlex import split
 from models.base_model import BaseModel
 from models.city import City
@@ -55,6 +56,26 @@ class HBNBCommand(cmd.Cmd):
             my_model = Review()
         my_model.save()
         print(my_model.id)
+        return (HBNBCommand.check_isatty())
+
+    def do_count(self, args):
+        if args == "":
+            print("**class name missing **")
+            return(HBNBCommand.check_isatty())
+        elif args not in HBNBCommand.class_list():
+            print("**class doesn't exist **")
+            return (HBNBCommand.check_isatty())
+        class_name = HBNBCommand.class_dict()
+        class_name = class_name[args]
+        class_obj = storage.all()
+        obj_list = class_obj.values()
+        if obj_list != []:
+            count = 0
+            for obj in obj_list:
+                if type(obj) is class_name:
+                    count += 1
+            print(count)
+            return (HBNBCommand.check_isatty())
         return (HBNBCommand.check_isatty())
 
     def do_show(self, args):
@@ -158,6 +179,20 @@ class HBNBCommand(cmd.Cmd):
         """does nothing"""
         pass
 
+    def precmd(self, line):
+        line_list = line.split(" ")
+        word_cmd = re.match(r"(\w+)\.(\w+)\(\)", line_list[0])
+        if word_cmd is not None:
+            cmd_list = line_list[0].split(".")
+            my_list = cmd_list[1].split("()")
+            temp = cmd_list[0]
+            cmd_list[0] = my_list[0]
+            cmd_list[1] = temp
+            line_list[0] = " ".join(cmd_list)
+            line = " ".join(line_list)
+            return super().precmd(line)
+        return super().precmd(line)
+
     @classmethod
     def check_isatty(cls):
         """check if standard input is issued from the terminal\n"""
@@ -171,6 +206,18 @@ class HBNBCommand(cmd.Cmd):
         cl2 = ["Place", "City", "Amenity", "State"]
         cl2.extend(cl1)
         return cl2
+
+    @classmethod
+    def class_dict(cls):
+        return {
+                "User": User,
+                "Place": Place,
+                "Amenity": Amenity,
+                "City": City,
+                "State": State,
+                "Review": Review,
+                "BaseModel": BaseModel,
+                }
 
 
 if __name__ == "__main__":
