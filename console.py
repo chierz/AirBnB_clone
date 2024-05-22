@@ -193,9 +193,22 @@ class HBNBCommand(cmd.Cmd):
 
     def precmd(self, line):
         line_list = line.split(" ")
+<<<<<<< HEAD
         word_cmd = re.match(r"(\w+)\.(\w+)\(([^)]*)\)", line_list[0])
         if word_cmd is not None:
             line = HBNBCommand.args_formatter(line_list[0])
+=======
+        word_cmd = re.match(r"(\w+)\.(\w+)\(\s*\"?\w*\"?\s*\)", line_list[0])
+        if word_cmd is not None:
+            cmd_list = line_list[0].split(".")
+            my_list = cmd_list[1].split(')')
+            my_list = my_list[0].split('(')
+            if my_list[1] != '':
+                
+                id_obj = my_list[1].split('"')
+            print(my_list)
+            line = " ".join(line_list)
+>>>>>>> f99da3d0e2fb0546fdfcc40e465e3051c3c89292
             return super().precmd(line)
         return super().precmd(line)
 
