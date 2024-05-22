@@ -93,10 +93,13 @@ class HBNBCommand(cmd.Cmd):
             return (HBNBCommand.check_isatty())
         storage.reload()
         all_obj_dict = storage.all()
-        class_id = argv[0] + "." + argv[1]
-        for key in all_obj_dict.keys():
-            if class_id == key:
-                print(all_obj_dict[key])
+        class_id = argv[1]
+        if '"' in class_id:
+            class_id = class_id.split('"')
+            class_id = class_id[1]
+        for obj in all_obj_dict.values():
+            if class_id == obj.id:
+                print(obj)
                 return (HBNBCommand.check_isatty())
             continue
         print("** no instance found **")
@@ -117,15 +120,20 @@ class HBNBCommand(cmd.Cmd):
             return (HBNBCommand.check_isatty())
         storage.reload()
         all_obj_dict = storage.all()
-        class_id = argv[0] + "." + argv[1]
-        for key in all_obj_dict.keys():
-            if key == class_id:
-                del all_obj_dict[key]
+        class_id = argv[1]
+        
+        if '"' in class_id:
+            class_id = class_id.split('"')
+            class_id = class_id[1]
+        class_id = argv[0] + "." + class_id
+        try:
+            if all_obj_dict[class_id]:
+                del all_obj_dict[class_id]
                 storage.save()
                 return (HBNBCommand.check_isatty())
-            continue
-        print("** no instance found **")
-        return (HBNBCommand.check_isatty())
+        except KeyError as e:
+            print("** no instance found **")
+            return (HBNBCommand.check_isatty())
 
     def do_all(self, args):
         """Prints all string representation of all instances\n
@@ -156,7 +164,11 @@ class HBNBCommand(cmd.Cmd):
             return (HBNBCommand.check_isatty())
         storage.reload
         all_obj_dict = storage.all()
-        class_id = argv[0] + "." + argv[1]
+        class_id = argv[1]
+        if '"' in class_id:
+            class_id = class_id.split('"')
+            class_id = class_id[1]
+            class_id = argv[0] + "." + class_id
         for key in all_obj_dict.keys():
             if class_id == key:
                 if len(argv) == 2:
@@ -181,15 +193,9 @@ class HBNBCommand(cmd.Cmd):
 
     def precmd(self, line):
         line_list = line.split(" ")
-        word_cmd = re.match(r"(\w+)\.(\w+)\(\)", line_list[0])
+        word_cmd = re.match(r"(\w+)\.(\w+)\(([^)]*)\)", line_list[0])
         if word_cmd is not None:
-            cmd_list = line_list[0].split(".")
-            my_list = cmd_list[1].split("()")
-            temp = cmd_list[0]
-            cmd_list[0] = my_list[0]
-            cmd_list[1] = temp
-            line_list[0] = " ".join(cmd_list)
-            line = " ".join(line_list)
+            line = HBNBCommand.args_formatter(line_list[0])
             return super().precmd(line)
         return super().precmd(line)
 
@@ -206,6 +212,20 @@ class HBNBCommand(cmd.Cmd):
         cl2 = ["Place", "City", "Amenity", "State"]
         cl2.extend(cl1)
         return cl2
+    @staticmethod
+    def args_formatter(my_str): 
+        my_str = my_str.split(".")
+        cls_name = my_str[0]
+        com = my_str[1][: my_str[1].index("(")]
+        args = my_str[1][my_str[1].index("("): ]
+        string = ""
+        for ch in args:
+            if ch == "," or ch == "=" or ch == "(" or ch == ")":
+                string += " "
+                continue
+            string += ch 
+        cmd_args = com + " " + cls_name + string
+        return cmd_args
 
     @classmethod
     def class_dict(cls):
