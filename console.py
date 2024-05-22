@@ -121,7 +121,6 @@ class HBNBCommand(cmd.Cmd):
         storage.reload()
         all_obj_dict = storage.all()
         class_id = argv[1]
-        
         if '"' in class_id:
             class_id = class_id.split('"')
             class_id = class_id[1]
@@ -193,22 +192,18 @@ class HBNBCommand(cmd.Cmd):
 
     def precmd(self, line):
         line_list = line.split(" ")
-<<<<<<< HEAD
         word_cmd = re.match(r"(\w+)\.(\w+)\(([^)]*)\)", line_list[0])
         if word_cmd is not None:
             line = HBNBCommand.args_formatter(line_list[0])
-=======
         word_cmd = re.match(r"(\w+)\.(\w+)\(\s*\"?\w*\"?\s*\)", line_list[0])
         if word_cmd is not None:
             cmd_list = line_list[0].split(".")
             my_list = cmd_list[1].split(')')
             my_list = my_list[0].split('(')
             if my_list[1] != '':
-                
                 id_obj = my_list[1].split('"')
             print(my_list)
             line = " ".join(line_list)
->>>>>>> f99da3d0e2fb0546fdfcc40e465e3051c3c89292
             return super().precmd(line)
         return super().precmd(line)
 
@@ -225,18 +220,19 @@ class HBNBCommand(cmd.Cmd):
         cl2 = ["Place", "City", "Amenity", "State"]
         cl2.extend(cl1)
         return cl2
+
     @staticmethod
-    def args_formatter(my_str): 
+    def args_formatter(my_str):
         my_str = my_str.split(".")
         cls_name = my_str[0]
         com = my_str[1][: my_str[1].index("(")]
-        args = my_str[1][my_str[1].index("("): ]
+        args = my_str[1][my_str[1].index("("):]
         string = ""
         for ch in args:
             if ch == "," or ch == "=" or ch == "(" or ch == ")":
                 string += " "
                 continue
-            string += ch 
+            string += ch
         cmd_args = com + " " + cls_name + string
         return cmd_args
 
