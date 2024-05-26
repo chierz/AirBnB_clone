@@ -191,20 +191,14 @@ class HBNBCommand(cmd.Cmd):
         pass
 
     def precmd(self, line):
-        line_list = line.split(" ")
-        word_cmd = re.match(r"(\w+)\.(\w+)\(([^)]*)\)", line_list[0])
+        word_cmd = re.match(r"(\w+)\.(\w+)\(([^)]*)\)", line)
         if word_cmd is not None:
-            line = HBNBCommand.args_formatter(line_list[0])
-        word_cmd = re.match(r"(\w+)\.(\w+)\(\s*\"?\w*\"?\s*\)", line_list[0])
-        if word_cmd is not None:
-            cmd_list = line_list[0].split(".")
-            my_list = cmd_list[1].split(')')
-            my_list = my_list[0].split('(')
-            if my_list[1] != '':
-                id_obj = my_list[1].split('"')
-            print(my_list)
-            line = " ".join(line_list)
-            return super().precmd(line)
+            check = line[line.index(")"): ]
+            if re.match(r'^\)\s*$', check) is not None:
+                line = HBNBCommand.args_formatter(line)
+                print(line)
+                return super().precmd(line)
+        print(line)
         return super().precmd(line)
 
     @classmethod
@@ -229,9 +223,11 @@ class HBNBCommand(cmd.Cmd):
         args = my_str[1][my_str[1].index("("):]
         string = ""
         for ch in args:
-            if ch == "," or ch == "=" or ch == "(" or ch == ")":
+            if ch == "," or ch == "=" or ch == "(":
                 string += " "
                 continue
+            if ch == ")":
+                break
             string += ch
         cmd_args = com + " " + cls_name + string
         return cmd_args
